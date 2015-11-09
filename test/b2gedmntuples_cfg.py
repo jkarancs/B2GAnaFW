@@ -55,10 +55,10 @@ options.register('DataProcessing',
                  'Data processing types. Options are: MC25ns_MiniAODv2, Data25ns_MiniAODv2, Data25ns_PromptRecov4')
 
 options.register('lheLabel',
-                 "",
+                 "externalLHEProducer",
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.string,
-                 'LHE module label, MC sample specific. Can be: externalLHEProducer')
+                 'LHE module label, MC sample specific. Can be: externalLHEProducer, source. For QCD, switch it off with "" i.e. no label')
 
 ### Expert options, do not change.
 options.register('useNoHFMET',
@@ -124,13 +124,6 @@ else:
 if "Data" in options.DataProcessing:
   print "!!!!Warning: You have chosen to run over data. lheLabel will be unset.\n"
   options.lheLabel = ""
-elif options.lheLabel == "":
-  if "FastSim" in options.DataProcessing:
-    print 'You have chosen to run over FastSim MC. lheLabel will be set to "source".\n'
-    options.lheLabel = "source"
-  else:
-    print 'You have chosen to run over FullSim MC. lheLabel will be set to "externalLHEProducer".\n'
-    options.lheLabel = "externalLHEProducer"
 
 ###inputTag labels
 rhoLabel          = "fixedGridRhoFastjetAll"
@@ -719,7 +712,9 @@ if "MC" in options.DataProcessing:
         'keep *_generator_*_*',
         "keep *_genPart_*_*",
         "keep *_genJetsAK8_*_*",
-        "keep *_genJetsAK8SoftDrop_*_*"
+        "keep *_genJetsAK8SoftDrop_*_*",
+        "keep LHEEventProduct_*_*_*",
+        "keep LHERunInfoProduct_*_*_*"
         )
 
 process.edmNtuplesOut.fileName=options.outputLabel
