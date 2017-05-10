@@ -378,15 +378,14 @@ ElectronUserData::isMatchedWithTrigger(const pat::Electron p, trigger::TriggerOb
 
 
 float ElectronUserData::getEA(float eta){
-  //These are Effective areas suitable for 80X samples post ICHEP
   float effArea = 0.;
-  if(abs(eta)>0.0 && abs(eta)<=1.0)   effArea = 0.1703;
-  if(abs(eta)>1.0 && abs(eta)<=1.479) effArea = 0.1715;
-  if(abs(eta)>1.479 && abs(eta)<=2.0) effArea = 0.1213;
-  if(abs(eta)>2.0 && abs(eta)<=2.2)   effArea = 0.1230;
-  if(abs(eta)>2.2 && abs(eta)<=2.3)   effArea = 0.1635;
-  if(abs(eta)>2.3 && abs(eta)<=2.4)   effArea = 0.1937;
-  if(abs(eta)>2.4 && abs(eta)<=5.0)   effArea = 0.2393;
+  if(abs(eta)>=0.0   && abs(eta)<1.0)   effArea = 0.1752;
+  if(abs(eta)>=1.0   && abs(eta)<1.479) effArea = 0.1862;
+  if(abs(eta)>=1.479 && abs(eta)<2.0)   effArea = 0.1411;
+  if(abs(eta)>=2.0   && abs(eta)<2.2)   effArea = 0.1534;
+  if(abs(eta)>=2.2   && abs(eta)<2.3)   effArea = 0.1903;
+  if(abs(eta)>=2.3   && abs(eta)<2.4)   effArea = 0.2243;
+  if(abs(eta)>=2.4   && abs(eta)<2.5)   effArea = 0.2687;
   return effArea;
 }
 

@@ -79,6 +79,11 @@ metFull =  cms.EDProducer(
         ),
     )
 
+metFullMuEGClean = metFull.clone(
+  src = cms.InputTag("skimmedPatMETMuEGClean"),
+  prefix = cms.untracked.string("metFullMuEGClean"),
+  )
+
 puppimetFull = metFull.clone(
   src = cms.InputTag("skimmedPatPuppiMET"),
   prefix = cms.untracked.string("puppimetFull"),

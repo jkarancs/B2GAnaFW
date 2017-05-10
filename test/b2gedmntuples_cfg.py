@@ -165,6 +165,7 @@ pvLabel           = 'offlineSlimmedPrimaryVertices'
 convLabel         = 'reducedEgamma:reducedConversions'
 particleFlowLabel = 'packedPFCandidates'    
 metLabel 	        = 'slimmedMETs'
+metMuEGCleanLabel 	= 'slimmedMETsMuEGClean'
 puppimetLabel 	  = 'slimmedMETsPuppi'
 metNoHFLabel 	    = 'slimmedMETsNoHF'
 
@@ -567,6 +568,26 @@ runMetCorAndUncFromMiniAOD(process,
                            isData=("Data" in options.DataProcessing),
 		)
 
+# Now you are creating the e/g corrected MET on top of the bad muon corrected MET (on re-miniaod)
+from PhysicsTools.PatUtils.tools.corMETFromMuonAndEG import corMETFromMuonAndEG
+corMETFromMuonAndEG(process,
+                    pfCandCollection="", #not needed
+                    electronCollection="slimmedElectronsBeforeGSFix",
+                    photonCollection="slimmedPhotonsBeforeGSFix",
+                    corElectronCollection="slimmedElectrons",
+                    corPhotonCollection="slimmedPhotons",
+                    allMETEGCorrected=True,
+                    muCorrection=False,
+                    eGCorrection=True,
+                    runOnMiniAOD=True,
+                    postfix="MuEGClean"
+                    )
+process.slimmedMETsMuEGClean = process.slimmedMETs.clone()
+process.slimmedMETsMuEGClean.src = cms.InputTag("patPFMetT1MuEGClean")
+process.slimmedMETsMuEGClean.rawVariation =  cms.InputTag("patPFMetRawMuEGClean")
+process.slimmedMETsMuEGClean.t1Uncertainties = cms.InputTag("patPFMetT1%sMuEGClean")
+del process.slimmedMETsMuEGClean.caloMET
+
 from PhysicsTools.PatAlgos.slimming.puppiForMET_cff import makePuppiesFromMiniAOD
 makePuppiesFromMiniAOD( process );
 runMetCorAndUncFromMiniAOD(process,
@@ -653,6 +674,12 @@ process.skimmedPatMET = cms.EDFilter(
     #    src = cms.InputTag(metLabel, "", "PAT"),
 #    src = cms.InputTag(metLabel, "", metProcess),
     src = cms.InputTag(metLabel),
+    cut = cms.string("")
+    )
+
+process.skimmedPatMETMuEGClean = cms.EDFilter(
+    "PATMETSelector",
+    src = cms.InputTag(metMuEGCleanLabel),
     cut = cms.string("")
     )
 
@@ -1072,4 +1099,4 @@ process.edmNtuplesOut.fileName=options.outputLabel
 
 process.endPath = cms.EndPath(process.edmNtuplesOut)
 
-open('B2GEntupleFileDump.py','w').write(process.dumpPython())
+#open('B2GEntupleFileDump.py','w').write(process.dumpPython())

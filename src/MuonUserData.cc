@@ -471,11 +471,11 @@ MuonUserData::convertTGraph2TH1F(TGraphAsymmErrors* g) {
 
 float MuonUserData::getEA(float eta){
   float effArea = 0.;
-  if(abs(eta)>0.0 && abs(eta)<=0.8) effArea = 0.0735;
-  if(abs(eta)>0.8 && abs(eta)<=1.3) effArea = 0.0619;
-  if(abs(eta)>1.3 && abs(eta)<=2.0) effArea = 0.0465;
-  if(abs(eta)>2.0 && abs(eta)<=2.2) effArea = 0.0433;
-  if(abs(eta)>2.2 && abs(eta)<=2.5) effArea = 0.0577;
+  if(abs(eta)>=0.0 && abs(eta)<0.8) effArea = 0.0735;
+  if(abs(eta)>=0.8 && abs(eta)<1.3) effArea = 0.0619;
+  if(abs(eta)>=1.3 && abs(eta)<2.0) effArea = 0.0465;
+  if(abs(eta)>=2.0 && abs(eta)<2.2) effArea = 0.0433;
+  if(abs(eta)>=2.2 && abs(eta)<2.5) effArea = 0.0577;
   return effArea;
 }
 
