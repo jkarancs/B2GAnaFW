@@ -13,8 +13,8 @@ This is a development branch of the B2G EDMNtuples to be used for 2017 ReMiniAOD
 ```
 setenv SCRAM_ARCH slc6_amd64_gcc530 ; ###chs/ tcsh 
 export SCRAM_ARCH=slc6_amd64_gcc530 ; ### bash
-cmsrel CMSSW_8_0_26_patch1
-cd CMSSW_8_0_26_patch1/src
+cmsrel CMSSW_8_0_26_patch2
+cd CMSSW_8_0_26_patch2/src
 cmsenv
 ```
  * Mirror for github
@@ -24,9 +24,10 @@ git cms-init
 ```
 
 ### Temporary checkouts:
- * For MET significance in the data
+ * For MET significance and EG/Mu corrections
 ```
-git cms-merge-topic cms-met:METRecipe_8020
+git cms-merge-topic -u cms-met:METRecipe_8020
+git cms-merge-topic -u cms-met:METRecipe_80X_part2
 ```
  * Apply latest Run II MET filters that are not in MINIAOD
 ```
