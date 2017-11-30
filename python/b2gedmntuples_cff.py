@@ -96,6 +96,10 @@ muonVars = (
         quantity = cms.untracked.string("originalObjectRef().key()")
    ),
    cms.PSet(
+        tag = cms.untracked.string("Iso04db"),
+        quantity = cms.untracked.string("userFloat('iso04db')")
+   ),
+   cms.PSet(
         tag = cms.untracked.string("Iso04"),
         quantity = cms.untracked.string("userFloat('iso04')")
    ),
@@ -1144,6 +1148,10 @@ photonVars = (
     cms.PSet(
         tag = cms.untracked.string("NeutralHadronIso"),
         quantity = cms.untracked.string("userFloat('isoN')")
+        ),
+    cms.PSet(
+        tag = cms.untracked.string("ChargedHadronIsoEAcorrectedsp15"),
+        quantity = cms.untracked.string("userFloat('isoC_EAcor')")
         ),
     cms.PSet(
         tag = cms.untracked.string("PhotonIsoEAcorrectedsp15"),

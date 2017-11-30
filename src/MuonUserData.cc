@@ -64,7 +64,7 @@ class  MuonUserData : public edm::EDProducer {
     EDGetTokenT< pat::PackedCandidateCollection > packedPFCandsLabel_;
     EDGetTokenT< edm::TriggerResults > triggerResultsLabel_;
     EDGetTokenT< trigger::TriggerEvent > triggerSummaryLabel_;
-    EDGetTokenT< double > rho_miniIso_;
+    EDGetTokenT< double > rho_;
     std::string hltPath_;
     double hlt2reco_deltaRmax_;
     TString mainROOTFILEdir_;
@@ -92,7 +92,7 @@ MuonUserData::MuonUserData(const edm::ParameterSet& iConfig):
   packedPFCandsLabel_(consumes<pat::PackedCandidateCollection>(iConfig.getParameter<edm::InputTag>("packedPFCands"))), 
   triggerResultsLabel_(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("triggerResults"))),
   triggerSummaryLabel_(consumes<trigger::TriggerEvent>(iConfig.getParameter<edm::InputTag>("triggerSummary"))),
-  rho_miniIso_(consumes<double>(edm::InputTag("fixedGridRhoFastjetCentralNeutral"))),
+  rho_                (consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"))),
   hltPath_            (iConfig.getParameter<std::string>("hltPath")),
   hlt2reco_deltaRmax_ (iConfig.getParameter<double>("hlt2reco_deltaRmax")),
   mainROOTFILEdir_    (iConfig.getUntrackedParameter<std::string>("mainROOTFILEdir",""))
@@ -144,9 +144,9 @@ void MuonUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
   const reco::Vertex& PV= pvHandle->front();
 
   //RHO
-  edm::Handle<double> rhoHandle_miniIso;
-  iEvent.getByToken(rho_miniIso_,rhoHandle_miniIso);
-  double rho_miniIso = *rhoHandle_miniIso;
+  edm::Handle<double> rhoHandle;
+  iEvent.getByToken(rho_,rhoHandle);
+  double rho = *rhoHandle;
 
   //Muons
   edm::Handle<std::vector<pat::Muon> > muonHandle;
@@ -264,9 +264,10 @@ void MuonUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
     double sumPhotonPt        = m.pfIsolationR04().sumPhotonEt;
     double sumPUPt            = m.pfIsolationR04().sumPUPt;
     double pt                 = m.pt();
-    double iso04 = (sumChargedHadronPt+TMath::Max(0.,sumNeutralHadronPt+sumPhotonPt-0.5*sumPUPt))/pt;
+    double iso04db = (sumChargedHadronPt+TMath::Max(0.,sumNeutralHadronPt+sumPhotonPt-0.5*sumPUPt))/pt;
     double EA = getEA(m.eta());
-    double miniIso = getPFMiniIsolation(packedPFCands, dynamic_cast<const reco::Candidate *>(&m), 0.05, 0.2, 10., false, true, EA, rho_miniIso);
+    double miniIso = getPFMiniIsolation(packedPFCands, dynamic_cast<const reco::Candidate *>(&m), 0.05, 0.2, 10., false, true, EA, rho);
+    double iso04 = (sumChargedHadronPt+TMath::Max(0.,sumNeutralHadronPt+sumPhotonPt - rho * EA))/pt;
 
     // trigger matched 
 
@@ -299,6 +300,7 @@ void MuonUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
     m.addUserFloat("dzErr",       dzErr);
     m.addUserFloat("dB",          dB);
     m.addUserFloat("dBErr",       dBErr);
+    m.addUserFloat("iso04db",     iso04db);
     m.addUserFloat("iso04",       iso04);
     m.addUserFloat("miniIso",     miniIso);
 
